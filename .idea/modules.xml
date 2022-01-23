@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/erent.iml" filepath="$PROJECT_DIR$/erent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eureka_service/eureka_service.iml" filepath="$PROJECT_DIR$/eureka_service/eureka_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway/gateway.iml" filepath="$PROJECT_DIR$/gateway/gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/invoices_microservice/invoices_microservice.iml" filepath="$PROJECT_DIR$/invoices_microservice/invoices_microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rentals_microservice/rentals_microservice.iml" filepath="$PROJECT_DIR$/rentals_microservice/rentals_microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scooters_microservice/scooters_microservice.iml" filepath="$PROJECT_DIR$/scooters_microservice/scooters_microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shared_entities/shared_entities.iml" filepath="$PROJECT_DIR$/shared_entities/shared_entities.iml" />
+      <module fileurl="file://$PROJECT_DIR$/users_microservice/users_microservice.iml" filepath="$PROJECT_DIR$/users_microservice/users_microservice.iml" />
+    </modules>
+  </component>
+</project>

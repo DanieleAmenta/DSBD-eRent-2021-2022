@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-dp
+spec:
+  selector:
+    matchLabels:
+      service: gateway
+  template:
+    metadata:
+      name: gateway-pod
+      labels:
+        service: gateway
+    spec:
+      containers:
+        - name: gateway-cnt
+          image: erent_gateway
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2221
+              name: gateway-port
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-auth-secret
+                  key: secret
+          envFrom:
+            - configMapRef:
+                name: gateway-config
+

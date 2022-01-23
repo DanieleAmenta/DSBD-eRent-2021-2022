@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rentals-dp
+spec:
+  selector:
+    matchLabels:
+      service: rentals
+  template:
+    metadata:
+      name: rentals-pod
+      labels:
+        service: rentals
+    spec:
+      containers:
+        - name: rentals-cnt
+          image: erent_rentals-service
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2223
+              name: rentals-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: rentals-config
+            - configMapRef:
+                name: common-config
+          livenessProbe:
+            httpGet:
+              path: /rental/ping
+              port: 2223
+            initialDelaySeconds: 300
+            failureThreshold: 5
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /rental/ping
+              port: 2223
+            initialDelaySeconds: 150
+            failureThreshold: 5
+            periodSeconds: 15
+
+

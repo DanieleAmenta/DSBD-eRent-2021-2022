@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service
+  labels:
+    app: kafka-service
+spec:
+  ports:
+    - name: plaintext
+      port: 9092
+  selector:
+    app: kafka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper-service
+  labels:
+    app: zookeeper-service
+spec:
+  #type: NodePort
+  ports:
+    - port: 2181
+      # targetPort: 2181
+      name: zoo-port
+  selector:
+    app: zookeeper
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db
+  labels:
+    app: mongo-db
+spec:
+  # type: NodePort
+  ports:
+    - name: mongo-port
+      port: 27017
+      # targetPort: 27017
+  selector:
+    db: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rentals-service
+  labels:
+    name: rentals-service
+spec:
+  # type: NodePort
+  ports:
+    - port: 2223
+      # targetPort: 2223
+      name: rentals-api-port
+  selector:
+    service: rentals
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+  labels:
+    name: users-service
+spec:
+  # type: NodePort
+  ports:
+    - port: 2225
+      # targetPort: 2225
+      name: users-api-port
+  selector:
+    service: users
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: invoices-service
+  labels:
+    name: invoices-service
+spec:
+  # type: NodePort
+  ports:
+    - port: 2226
+      # targetPort: 2226
+      name: invoices-api-port
+  selector:
+    service: invoices
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scooters-service
+  labels:
+    name: scooters-service
+spec:
+  # type: NodePort
+  ports:
+    - port: 2227
+      # targetPort: 2227
+      name: scoot-api-port
+  selector:
+    service: scooters
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+  labels:
+    name: gateway-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 2221
+      targetPort: 2221
+      name: gateway-port
+  selector:
+    service: gateway

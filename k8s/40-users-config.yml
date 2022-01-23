@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-config
+data:
+  MONGO_DB: "users_db"
+
+  USERS_SERVICE_APP_NAME: "users-service"
+  USERS_SERVICE_APP_PORT: "2225"
+  USERS_SERVICE_API_BASE: "user"

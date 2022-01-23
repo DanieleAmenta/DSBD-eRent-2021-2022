@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  mongo_db:
+    image: mongo
+    volumes:
+      - mongodb:/var/lib/mongo
+
+  scooters-service:
+    build:
+      context: .
+      dockerfile: ./scooters_microservice/Dockerfile
+    #ports:
+    #  - "2227"
+    #  - "2227:2227"
+    restart: always
+    env_file:
+      - scooter.env
+      - commons.env
+
+volumes:
+  mongodb:

@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  mongo_db:
+    image: mongo
+    volumes:
+      - mongodb:/var/lib/mongo
+
+  invoices-service:
+    build:
+      context: .
+      dockerfile: ./invoices_microservice/Dockerfile
+    #ports:
+    #  - "2226"
+    #  - "2226:2226"
+    restart: always
+    env_file:
+      - invoice.env
+      - commons.env
+
+volumes:
+  mongodb:

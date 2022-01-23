@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="BUILD_PROCESS_HEAP_SIZE" value="8000" />
+    <option name="BUILD_PROCESS_ADDITIONAL_VM_OPTIONS" value="-Xmx2g" />
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="eureka_service" />
+        <module name="invoices_microservice" />
+        <module name="shared_entities" />
+        <module name="users_microservice" />
+        <module name="rentals_microservice" />
+        <module name="scooters_microservice" />
+        <module name="gateway" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="eureka_service" target="1.8" />
+      <module name="gateway" target="1.8" />
+      <module name="invoices_microservice" target="1.8" />
+      <module name="logging_microservice" target="1.8" />
+      <module name="rentals_microservice" target="1.8" />
+      <module name="scooters_microservice" target="1.8" />
+      <module name="shared_entities" target="1.5" />
+      <module name="users_microservice" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="eureka_service" options="-parameters" />
+      <module name="gateway" options="-parameters" />
+      <module name="invoices_microservice" options="-parameters" />
+      <module name="logging_microservice" options="-parameters" />
+      <module name="rentals_microservice" options="-parameters" />
+      <module name="scooters_microservice" options="-parameters" />
+      <module name="shared_entities" options="" />
+      <module name="users_microservice" options="-parameters" />
+    </option>
+  </component>
+</project>

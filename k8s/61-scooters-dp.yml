@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scooters-dp
+spec:
+  selector:
+    matchLabels:
+      service: scooters
+  template:
+    metadata:
+      name: scooters-pod
+      labels:
+        service: scooters
+    spec:
+      containers:
+        - name: scooters-cnt
+          image: erent_scooters-service
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 2227
+              name: scoot-api-port
+          env:
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: scooters-config
+            - configMapRef:
+                name: common-config
+          livenessProbe:
+            httpGet:
+              path: /scooter/ping
+              port: 2227
+            initialDelaySeconds: 300
+            failureThreshold: 5
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /scooter/ping
+              port: 2227
+            initialDelaySeconds: 150
+            failureThreshold: 5
+            periodSeconds: 15
+
+

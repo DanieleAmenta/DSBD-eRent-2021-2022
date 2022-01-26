@@ -62,7 +62,17 @@ public class KafkaConfig {
     }
 
     @Bean
+    public KafkaTemplate<String, String> replyTemplate(ProducerFactory<String, String> pf,
+                                                       ConcurrentKafkaListenerContainerFactory<String, String> factory) {
+        KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(pf);
+        factory.getContainerProperties().setMissingTopicsFatal(false);
+        factory.setReplyTemplate(kafkaTemplate);
+        return kafkaTemplate;
+    }
+
+    @Bean
     public NewTopic invoiceTopic() {
+//        return new NewTopic(invoice_topic_name, 10, (short) 1);
         return TopicBuilder.name(invoice_topic_name)
                 .partitions(10)
                 .build();

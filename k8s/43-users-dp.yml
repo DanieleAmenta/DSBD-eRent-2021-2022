@@ -11,6 +11,10 @@ spec:
       name: users-pod
       labels:
         service: users
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2225"
+        prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
         - name: users-cnt

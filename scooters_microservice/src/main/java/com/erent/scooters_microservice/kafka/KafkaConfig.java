@@ -77,6 +77,8 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic scooterTopic() {
+//        return new NewTopic(scooter_topic, 10, (short) 1);
+
         return TopicBuilder.name(scooter_topic)
                 .partitions(10)
                 .build();
@@ -84,6 +86,8 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic scooterRequestTopic() {
+//        return new NewTopic(scooter_requests, 10, (short) 1);
+
         return TopicBuilder.name(scooter_requests)
                 .partitions(10)
                 .build();
@@ -91,6 +95,8 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic scooterResponseTopic() {
+//        return new NewTopic(scooter_responses, 10, (short) 1);
+
         return TopicBuilder.name(scooter_responses)
                 .partitions(10)
                 .build();

@@ -5,6 +5,7 @@ import com.erent.invoices_microservice.data.InvoiceRepository;
 import com.erent.invoices_microservice.entities.Invoice;
 import com.erent.invoices_microservice.service.InvoiceService;
 import com.google.gson.Gson;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,7 @@ public class InvoiceController {
         return "Pong";
     }
 
+    @Timed(value = "opened.invoice", description = "Time spent to open invoices")
     @GetMapping(path = "/{id}")
     public @ResponseBody
     String getInvoice(@PathVariable String id,
@@ -73,6 +75,7 @@ public class InvoiceController {
         return new Gson().toJson(i.get());
     }
 
+    @Timed(value = "list.invoice", description = "Time spent to view invoices list")
     @GetMapping(path = "/invoices")
     public @ResponseBody
     String getAllInvoices(@RequestHeader("X-User-ID") String user_id,

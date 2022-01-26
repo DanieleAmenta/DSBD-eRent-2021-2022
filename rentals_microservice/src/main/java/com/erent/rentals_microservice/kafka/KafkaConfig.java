@@ -95,6 +95,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic rentalTopic() {
+//        return new NewTopic(rental_topic_name, 10, (short) 1);
         return TopicBuilder.name(rental_topic_name)
                 .partitions(10)
                 .build();
@@ -102,6 +103,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic invoiceTopic() {
+//        return new NewTopic(invoice_topic_name, 10, (short) 1);
         return TopicBuilder.name(invoice_topic_name)
                 .partitions(10)
                 .build();
@@ -109,6 +111,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic scooter_requests_topic() {
+//        return new NewTopic(scooter_requests_topic, 10, (short) 1);
         return TopicBuilder.name(scooter_requests_topic)
                 .partitions(10)
                 .build();
@@ -116,6 +119,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic kReplies() {
+//        return new NewTopic(scooter_responses_topic, 10, (short) 1);
         return TopicBuilder.name(scooter_responses_topic)
                 .partitions(10)
                 .build();

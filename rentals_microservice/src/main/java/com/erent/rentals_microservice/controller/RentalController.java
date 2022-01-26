@@ -1,13 +1,11 @@
 package com.erent.rentals_microservice.controller;
 
 import com.erent.rentals_microservice.data.RentalRepository;
-import com.erent.rentals_microservice.entities.Rental;
-import com.erent.rentals_microservice.entities.RentalStatus;
+import com.erent.rentals_microservice.entities.*;
 import com.erent.rentals_microservice.service.RentalService;
-import com.erent.shared_entities.scooter.ScooterOperation;
-import com.erent.shared_entities.scooter.ScooterRequest;
-import com.erent.shared_entities.scooter.ScooterResponse;
 import com.google.gson.Gson;
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping(path = "/${api_base}")
@@ -34,6 +33,9 @@ public class RentalController {
 
     @Autowired
     RentalRepository repository;
+
+    /*@Autowired
+    MetricsUtil metricsUtil;*/
 
     @Autowired
     private RentalService service;
@@ -64,6 +66,14 @@ public class RentalController {
 
     @Value("${admin_user_id}")
     private String admin_user_id;
+
+    private final AtomicLong rentalFailureCounter = new AtomicLong();
+
+    private final MeterRegistry registry;
+
+    public RentalController(MeterRegistry registry) {
+        this.registry = registry;
+    }
 
     @GetMapping(path = "/ping")
     public @ResponseBody
@@ -100,6 +110,7 @@ public class RentalController {
         return new Gson().toJson(rental.get());
     }
 
+    @Timed(value = "started.rental", description = "Time spent to start rentals")
     @PostMapping(path = "/start")
     public @ResponseBody
     String startRental(@RequestParam String scooterId,
@@ -120,6 +131,8 @@ public class RentalController {
         try {
             response = sendScooterRequest(scooter);
         } catch (Exception e) {
+            rentalFailureCounter.incrementAndGet();
+            //metricsUtil.incrementCounters("failure");
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
             throw new ResponseStatusException(
@@ -128,6 +141,8 @@ public class RentalController {
         }
 
         if (!response.getSuccess()) {
+            rentalFailureCounter.incrementAndGet();
+            //metricsUtil.incrementCounters("failure");
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, response.getMessage()
             );
@@ -154,6 +169,7 @@ public class RentalController {
         return new Gson().toJson(rental);
     }
 
+    @Timed(value = "finished.rental", description = "Time spent to finish rentals")
     @PostMapping(path = "/stop")
     public @ResponseBody
     String stopRental(@RequestParam String rental_id,
@@ -165,18 +181,24 @@ public class RentalController {
 
         Optional<Rental> rental = repository.findById(rental_id);
         if (!rental.isPresent()) {
+            rentalFailureCounter.incrementAndGet();
+            //metricsUtil.incrementCounters("failure");
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Specified object can't be found."
             );
         }
 
         if (!rental.get().getUserId().equals(user_id) && rental.get().getUserId().equals(admin_user_id)) {
+            rentalFailureCounter.incrementAndGet();
+            //metricsUtil.incrementCounters("failure");
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN, "You don't own this resource."
             );
         }
 
         if (rental.get().getStatus() == RentalStatus.COMPLETED) {
+            rentalFailureCounter.incrementAndGet();
+            //metricsUtil.incrementCounters("failure");
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Invalid operation."
             );
@@ -193,12 +215,17 @@ public class RentalController {
         try {
             response = sendScooterRequest(scooterRequest);
         } catch (Exception e) {
+            rentalFailureCounter.incrementAndGet();
+            //metricsUtil.incrementCounters("failure");
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Service communication error."
             );
         }
 
         if (!response.getSuccess()) {
+            rentalFailureCounter.incrementAndGet();
+            //metricsUtil.incrementCounters("failure");
+
             // FREEZE THE TIMER
             rental.get().setStatus(RentalStatus.FROZEN);
             rental.get().setStopTimestamp(Instant.now().getEpochSecond());

@@ -5,6 +5,7 @@ import com.erent.scooters_microservice.entities.Scooter;
 import com.erent.scooters_microservice.entities.ScooterStatus;
 import com.erent.scooters_microservice.service.ScooterService;
 import com.google.gson.Gson;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,7 @@ public class ScooterController {
         return "Pong";
     }
 
+    @Timed(value = "add.scooter", description = "Time spent to add scooters")
     @PostMapping(path = "/add")
     public @ResponseBody
     String addScooter(@RequestBody Scooter scooter,
@@ -72,6 +74,7 @@ public class ScooterController {
         return new Gson().toJson(scooterAdded);
     }
 
+    @Timed(value = "viewed.scooter", description = "Time spent to view scooters list")
     @GetMapping(path = "/scooters")
     public @ResponseBody
     String getScooters(HttpServletRequest servletRequest) {

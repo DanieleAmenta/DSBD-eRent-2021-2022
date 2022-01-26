@@ -11,6 +11,10 @@ spec:
       name: scooters-pod
       labels:
         service: scooters
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2227"
+        prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
         - name: scooters-cnt

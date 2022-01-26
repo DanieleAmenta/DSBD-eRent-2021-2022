@@ -11,6 +11,10 @@ spec:
       name: rentals-pod
       labels:
         service: rentals
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2223"
+        prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
         - name: rentals-cnt

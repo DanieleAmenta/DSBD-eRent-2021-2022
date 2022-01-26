@@ -6,6 +6,7 @@ import com.erent.users_microservice.entities.User;
 import com.erent.users_microservice.service.AuthService;
 import com.erent.users_microservice.service.UserService;
 import com.google.gson.Gson;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping(path = "/${api_base}")
@@ -24,6 +26,9 @@ public class UserController {
 
     @Autowired
     UserService service;
+
+    /*@Autowired
+    MetricsUtil metricsUtil;*/
 
     @Autowired
     AuthService authService;
@@ -33,6 +38,15 @@ public class UserController {
 
     @Value("${admin_user_id}")
     private String admin_user_id;
+
+    private final AtomicLong loginSuccessCounter = new AtomicLong();
+    private final AtomicLong loginFailureCounter = new AtomicLong();
+
+    private final MeterRegistry registry;
+
+    public UserController(MeterRegistry registry) {
+        this.registry = registry;
+    }
 
     @GetMapping(path = "/ping")
     public @ResponseBody
@@ -64,11 +78,14 @@ public class UserController {
         Optional<User> user = service.getUserByEmailAndPassword(request.getEmail(), request.getPassword());
 
         if (!user.isPresent()) {
+            //metricsUtil.incrementCounters("failure");
+            loginFailureCounter.incrementAndGet();
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "User not found."
             );
         }
 
+        loginSuccessCounter.incrementAndGet();
         return authService.getAuthenticationResponse(user.get());
     }
 

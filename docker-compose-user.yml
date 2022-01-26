@@ -10,9 +10,9 @@ services:
     build:
       context: .
       dockerfile: ./users_microservice/Dockerfile
-    # ports:
+    ports:
     #  - "2225"
-    #  - "2225:2225"
+      - "2225:2225"
     restart: always
     env_file:
       - user.env

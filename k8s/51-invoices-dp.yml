@@ -11,6 +11,10 @@ spec:
       name: invoices-pod
       labels:
         service: invoices
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2226"
+        prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
         - name: invoices-cnt

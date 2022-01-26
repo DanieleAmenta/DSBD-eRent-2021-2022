@@ -50,7 +50,7 @@ public class KafkaScooterListener {
         kafkaTemplate.send(topic, key, new Gson().toJson(message));
     }
 
-    @KafkaListener(topics = "scooter_requests", groupId = "${spring.application.name}")
+    @KafkaListener(topics = "scooter_requests", groupId = "scooter_replies_group")
     @SendTo("scooter_responses")
     public String scooterRequestsHandler(String data) {
         System.out.println("New request: " + data);

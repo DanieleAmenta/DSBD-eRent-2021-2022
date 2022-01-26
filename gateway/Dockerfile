@@ -1,8 +1,10 @@
 FROM maven:3-jdk-8 as builder
 WORKDIR /project
 COPY ./gateway/pom.xml ./pom.xml
+#COPY . .
 RUN mvn dependency:go-offline -B
 COPY ./gateway/src ./src
+#COPY /src ./src
 RUN mvn package
 
 FROM java:8-alpine
